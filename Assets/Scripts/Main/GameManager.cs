@@ -53,13 +53,11 @@ namespace Assets.Scripts.Main
             var distance = Vector3.Distance(EndingPoint.position, PlayerSphere.Transform.position); 
             var mask = LayerMask.GetMask("Obstacle");
             var hits = Physics.SphereCastAll(PlayerSphere.Transform.position, PlayerSphere.Size / 2f, direction, distance, mask);
-            Debug.Log(hits.Count());
 
             foreach (var hit in hits)
             {
                 if (hit.collider.CompareTag("Obstacle"))
                 {
-                    Debug.DrawLine(PlayerSphere.Transform.position, hit.point, Color.red, 2f);
                     return false;
                 }
             }
