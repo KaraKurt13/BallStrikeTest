@@ -52,7 +52,10 @@ MonoBehaviour:
   Transform: {fileID: 8202279079167849657}
   Size: 0.2
   Collider: {fileID: 4392450254933324572}
-  RigidBody: {fileID: 2893732733736394397}
+  Rigidbody: {fileID: 2893732733736394397}
+  IsDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
   _impactAreaTransform: {fileID: 97360708840054795}
   _impactAreaRenderer: {fileID: 2231535919359050868}
 --- !u!33 &3389130167131733696
@@ -181,7 +184,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8202279079167849657}

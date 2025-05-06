@@ -6,9 +6,7 @@ namespace Assets.Scripts.Main
 {
     public class Engine : MonoBehaviour
     {
-        public ShootingController ShootingController;
-
-        public InputController InputController;
+        public GameManager GameManager;
 
         void Start()
         {
@@ -18,6 +16,7 @@ namespace Assets.Scripts.Main
         private void Initialize()
         {
             GenerateObstacles();
+            GameManager.Activate();
         }
 
         [Header("Obstacles Generation")]

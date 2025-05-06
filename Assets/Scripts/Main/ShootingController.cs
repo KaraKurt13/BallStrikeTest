@@ -9,14 +9,28 @@ namespace Assets.Scripts.Main
     {
         public InputController InputController;
 
+        public GameManager GameManager;
+
         public PlayerSphere PlayerSphere;
 
-        private bool _isCharging = false;
+        private bool _isCharging = false, _isActive = false;
 
         private const float _sizeStep = 0.01f;
 
+        public void Activate()
+        {
+            _isActive = true;
+        }
+
+        public void Deactivate()
+        {
+            _isActive = false;
+        }
+
         private void Update()
         {
+            if (!_isActive) return;
+
             if (InputController.IsReleased())
             {
                 OnRelease();
@@ -26,6 +40,8 @@ namespace Assets.Scripts.Main
 
         private void FixedUpdate()
         {
+            if (!_isActive) return;
+
             if (InputController.IsHolding())
             {
                 OnHold();
@@ -63,6 +79,7 @@ namespace Assets.Scripts.Main
         {
             _isCharging = true;
             _shotSphere = Instantiate(_shotSpherePrefab, _shotSphereSpawnPoint.position, Quaternion.identity).GetComponent<ShotSphere>();
+            _shotSphere.IsDestroyed.AddListener(OnSphereDestruction);
         }
 
         private void EndCharging()
@@ -80,6 +97,11 @@ namespace Assets.Scripts.Main
         {
             _shotSphere.Shoot(_targetPoint.position);
             _shotSphere = null;
+        }
+
+        private void OnSphereDestruction()
+        {
+            GameManager.CheckGameEndingCondiition();
         }
     }
 }

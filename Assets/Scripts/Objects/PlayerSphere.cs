@@ -10,7 +10,17 @@ namespace Assets.Scripts.Objects
 
         public LineRenderer Line;
 
+        public Rigidbody Rigidbody;
+
         public float Size = 3;
+
+        public void Push(Vector3 target)
+        {
+            var direction = (target - transform.position).normalized;
+            var force = direction * 80f;
+            Rigidbody.useGravity = true;
+            Rigidbody.AddForce(force);
+        }
 
         public void DecreaseSize(float step)
         {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Assets.Scripts.Objects
 {
@@ -12,7 +13,9 @@ namespace Assets.Scripts.Objects
 
         public SphereCollider Collider;
 
-        public Rigidbody RigidBody;
+        public Rigidbody Rigidbody;
+
+        public UnityEvent IsDestroyed = new();
 
         private const float _impactAreaModifier = 2f;
 
@@ -33,14 +36,8 @@ namespace Assets.Scripts.Objects
             Collider.radius = Size;
             Collider.enabled = true;
             _impactAreaRenderer.enabled = false;
-            RigidBody.useGravity = true;
-            RigidBody.AddForce(force, ForceMode.Impulse);
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            ImpactArea();
-            Destroy(gameObject);
+            Rigidbody.useGravity = true;
+            Rigidbody.AddForce(force, ForceMode.Impulse);
         }
 
         private void ImpactArea()
@@ -56,7 +53,21 @@ namespace Assets.Scripts.Objects
                     obstacle.Disable();
                 }
             }
+        }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            ImpactArea();
+            IsDestroyed?.Invoke();
+            IsDestroyed.RemoveAllListeners();
+            Destroy(gameObject);
+        }
+
+        private void OnBecameInvisible()
+        {
+            IsDestroyed?.Invoke();
+            IsDestroyed.RemoveAllListeners();
+            Destroy(gameObject);
         }
     }
 }
