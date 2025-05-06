@@ -2,17 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Engine : MonoBehaviour
+namespace Assets.Scripts.Main
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Engine : MonoBehaviour
     {
-        
-    }
+        void Start()
+        {
+            Initialize();
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void Initialize()
+        {
+            GenerateObstacles();
+        }
+
+        [Header("Obstacles Generation")]
+
+        [SerializeField] private GameObject _obstaclePrefab;
+        [SerializeField] private Transform _generationCenter;
+
+        private const int _obstaclesCount = 70;
+        private const float _generationRadius = 10f;
+
+        private void GenerateObstacles()
+        {
+            for (int i = 0; i < _obstaclesCount; i++)
+            {
+                Vector2 randomPos = Random.insideUnitCircle * _generationRadius;
+                Vector3 spawnPosition = new Vector3(
+                    _generationCenter.position.x + randomPos.x,
+                    0.5f,
+                    _generationCenter.position.z + randomPos.y
+                );
+
+                Instantiate(_obstaclePrefab, spawnPosition, Quaternion.identity);
+            }
+        }
     }
 }
