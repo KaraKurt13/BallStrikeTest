@@ -8,13 +8,13 @@ namespace Assets.Scripts.Objects
     {
         public Transform Transform;
 
-        public float Size, ImpactAreaSize;
+        public float Size;
 
         public SphereCollider Collider;
 
         public Rigidbody RigidBody;
 
-        private const float _impactAreaModifier = 1.3f;
+        private const float _impactAreaModifier = 2f;
 
         [Header("Impact Area")]
         [SerializeField] private Transform _impactAreaTransform;
@@ -23,21 +23,40 @@ namespace Assets.Scripts.Objects
         public void IncreaseSize(float step)
         {
             Size += step;
-            ImpactAreaSize = Size * _impactAreaModifier;
-
             Transform.localScale = new Vector3(Size, Size, Size);
-            _impactAreaTransform.localScale = new Vector3(ImpactAreaSize, ImpactAreaSize, ImpactAreaSize);
         }
 
-        public void Shoot()
+        public void Shoot(Vector3 target)
         {
+            var direction = (target - transform.position).normalized;
+            var force = direction * 50f;
+            Collider.radius = Size;
             Collider.enabled = true;
             _impactAreaRenderer.enabled = false;
+            RigidBody.useGravity = true;
+            RigidBody.AddForce(force, ForceMode.Impulse);
         }
 
         private void OnTriggerEnter(Collider other)
         {
+            ImpactArea();
             Destroy(gameObject);
+        }
+
+        private void ImpactArea()
+        {
+            var impactRadius = Size * _impactAreaModifier;
+            var center = transform.position;
+            var hits = Physics.OverlapSphere(center, impactRadius);
+
+            foreach (var collider in hits)
+            {
+                if (collider.TryGetComponent<Obstacle>(out var obstacle))
+                {
+                    obstacle.Disable();
+                }
+            }
+
         }
     }
 }

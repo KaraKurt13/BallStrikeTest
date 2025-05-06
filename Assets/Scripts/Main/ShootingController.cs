@@ -13,18 +13,22 @@ namespace Assets.Scripts.Main
 
         private bool _isCharging = false;
 
-        private const float _sizeStep = 0.1f;
+        private const float _sizeStep = 0.01f;
 
         private void Update()
+        {
+            if (InputController.IsReleased())
+            {
+                OnRelease();
+                return;
+            }
+        }
+
+        private void FixedUpdate()
         {
             if (InputController.IsHolding())
             {
                 OnHold();
-            }
-            
-            if (InputController.IsReleased())
-            {
-                OnRelease();
             }
         }
 
@@ -51,13 +55,14 @@ namespace Assets.Scripts.Main
 
         [SerializeField] private GameObject _shotSpherePrefab;
         [SerializeField] private Transform _shotSphereSpawnPoint;
+        [SerializeField] private Transform _targetPoint;
 
         private ShotSphere _shotSphere;
 
         private void StartCharging()
         {
             _isCharging = true;
-            _shotSphere = Instantiate(_shotSpherePrefab, _shotSphereSpawnPoint).GetComponent<ShotSphere>();
+            _shotSphere = Instantiate(_shotSpherePrefab, _shotSphereSpawnPoint.position, Quaternion.identity).GetComponent<ShotSphere>();
         }
 
         private void EndCharging()
@@ -73,7 +78,8 @@ namespace Assets.Scripts.Main
 
         private void InvokeShoot()
         {
-            _shotSphere.Shoot();
+            _shotSphere.Shoot(_targetPoint.position);
+            _shotSphere = null;
         }
     }
 }

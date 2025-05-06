@@ -8,12 +8,22 @@ namespace Assets.Scripts.Main
     {
         public bool IsHolding()
         {
-            return true;
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                return touch.phase == TouchPhase.Stationary || touch.phase == TouchPhase.Moved;
+            }
+            return false;
         }
 
         public bool IsReleased()
         {
-            return true;
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                return touch.phase == TouchPhase.Ended;
+            }
+            return false;
         }
     }
 }
