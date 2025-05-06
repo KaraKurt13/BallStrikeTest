@@ -6,6 +6,10 @@ namespace Assets.Scripts.Main
 {
     public class Engine : MonoBehaviour
     {
+        public ShootingController ShootingController;
+
+        public InputController InputController;
+
         void Start()
         {
             Initialize();
